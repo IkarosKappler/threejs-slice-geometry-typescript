@@ -1,18 +1,40 @@
 {
   "name": "threejs-slice-geometry",
   "version": "0.2.2",
-  "main": "src/slice.js",
+  "author": "tdhooper",
+  "co-author": "Ikaros Kappler",
+  "description": "Slice three.js geometry with a plane.",
+  "main": "src/cjs/slice.js",
+  "module": "src/esm/index.js",
+  "types": "src/cjs/index.d.ts",
   "devDependencies": {
     "three.js": "^0.73.0",
     "browserify": "^14.4.0",
     "jasmine": "^2.8.0",
     "uglify-js": "^3.1.3"
   },
+  "repository": {
+    "url": "https://github.com/IkarosKappler/threejs-slice-geometry-typescript"
+  },
   "scripts": {
     "test": "jasmine",
-    "build": "npm run clean && npm run browserify && npm run uglify",
-    "clean": "rm -rf build && mkdir build",
-    "browserify": "browserify src/browser.js -o build/slice.js",
-    "uglify": "uglifyjs build/slice.js -o build/slice.min.js"
+    "build": "npm run compile && npm run webpack",
+    "compile": "npm run compile:cjs && npm run compile:esm",
+    "compile:cjs": "tsc -p tsconfig.json --target es5 --module commonjs --outDir src/cjs/",
+    "compile:esm": "tsc -p tsconfig.json --target ES2015 --module ESNext --outdir src/esm/ --moduleResolution node",
+    "webpack": "npm run webpack:dev && npm run webpack:prod",
+    "webpack:dev": "npx webpack --env=development --config webpack.config.js",
+    "webpack:prod": "npx webpack --env=production --config webpack.config.js",
+    "_build": "npm run _clean && npm run _browserify && npm run _uglify",
+    "_clean": "rm -rf build && mkdir build",
+    "_browserify": "browserify src/browser.js -o build/slice.js",
+    "_uglify": "uglifyjs build/slice.js -o build/slice.min.js"
+  },
+  "dependencies": {
+    "@types/offscreencanvas": "^2019.6.4",
+    "three": "^0.124.0",
+    "typescript": "^4.4.3",
+    "webpack": "^5.55.0",
+    "webpack-cli": "^4.8.0"
   }
 }
