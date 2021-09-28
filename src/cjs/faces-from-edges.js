@@ -16,7 +16,7 @@ var facesFromEdges = function (edges) {
     return faces;
 };
 exports.facesFromEdges = facesFromEdges;
-function joinEdges(edges) {
+var joinEdges = function (edges) {
     var changes = true;
     var chains = edges.map(function (edge) {
         return [edge];
@@ -28,8 +28,8 @@ function joinEdges(edges) {
         return chain.length;
     });
     return chains;
-}
-function connectChains(chains) {
+};
+var connectChains = function (chains) {
     chains.forEach(function (chainA, i) {
         chains.forEach(function (chainB, j) {
             var merged = mergeChains(chainA, chainB);
@@ -40,8 +40,8 @@ function connectChains(chains) {
         });
     });
     return false;
-}
-function mergeChains(chainA, chainB) {
+};
+var mergeChains = function (chainA, chainB) {
     if (chainA === chainB) {
         return false;
     }
@@ -64,21 +64,20 @@ function mergeChains(chainA, chainB) {
         return true;
     }
     return false;
-}
-function chainStart(chain) {
+};
+var chainStart = function (chain) {
     return chain[0][0];
-}
-function chainEnd(chain) {
+};
+var chainEnd = function (chain) {
     return chain[chain.length - 1][1];
-}
-function reverseChain(chain) {
+};
+var reverseChain = function (chain) {
     chain.reverse();
     chain.forEach(function (edge) {
         edge.reverse();
     });
-}
-function validFace(chain) {
+};
+var validFace = function (chain) {
     return chainStart(chain) === chainEnd(chain) ? 1 : 0;
-}
-// module.exports = facesFromEdges;
+};
 //# sourceMappingURL=faces-from-edges.js.map

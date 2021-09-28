@@ -1,3 +1,4 @@
 node_modules
 package-lock.json
 src/_original
+dist/threejs-slice-geometry-vendor*
