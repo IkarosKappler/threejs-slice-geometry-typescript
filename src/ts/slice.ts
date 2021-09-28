@@ -3,7 +3,7 @@ import {facesFromEdges } from "./faces-from-edges";
 // Note: THREE.Geometry is only available until version 0.124.0
 import * as THREE from "three";
 import { GeometryBuilder } from "./GeometryBuilder";
-import { FACE_KEYS, ON } from "./constants";
+import { BACK, FACE_KEY, FACE_KEYS, FRONT, ON, POSITION_TYPE } from "./constants";
 
 
 // TODO: cc
@@ -18,40 +18,38 @@ import { FACE_KEYS, ON } from "./constants";
 // export const FACE_KEYS : [FACE_KEY,FACE_KEY,FACE_KEY]= ['a', 'b', 'c'];
 
 export const sliceGeometry = (geometry:THREE.Geometry, plane:THREE.Plane, closeHoles:boolean) => {
-    var sliced : THREE.Geometry = new THREE.Geometry();
-    var builder = new GeometryBuilder(geometry, sliced, plane);
+    const sliced : THREE.Geometry = new THREE.Geometry();
+    const builder = new GeometryBuilder(geometry, sliced, plane);
 
-    var distances = [];
-    var positions = [];
+    const distances : number[] = [];
+    const positions : POSITION_TYPE[] = [];
 
-    geometry.vertices.forEach(function(vertex) {
-        var distance = findDistance(vertex, plane);
-        var position = distanceAsPosition(distance);
+    geometry.vertices.forEach((vertex:THREE.Vector3) => {
+        const distance : number = findDistance(vertex, plane);
+        const position : POSITION_TYPE= distanceAsPosition(distance);
         distances.push(distance);
         positions.push(position);
     });
 
     geometry.faces.forEach(function(face, faceIndex) {
 
-        var facePositions = FACE_KEYS.map(function(key) {
+        const facePositions : POSITION_TYPE[] = FACE_KEYS.map(function(key) {
             return positions[face[key]];
         });
 
-        if (
-            facePositions.indexOf(FRONT) === -1 &&
-            facePositions.indexOf(BACK) !== -1
-        ) {
+        if ( facePositions.indexOf(FRONT) === -1 &&
+                facePositions.indexOf(BACK) !== -1 ) {
             return;
         }
 
         builder.startFace(faceIndex);
 
-        var lastKey = FACE_KEYS[FACE_KEYS.length - 1];
-        var lastIndex = face[lastKey];
-        var lastDistance = distances[lastIndex];
-        var lastPosition = positions[lastIndex];
+        let lastKey : FACE_KEY = FACE_KEYS[FACE_KEYS.length - 1];
+        let lastIndex : number = face[lastKey];
+        let lastDistance : number = distances[lastIndex];
+        let lastPosition : POSITION_TYPE = positions[lastIndex];
 
-        FACE_KEYS.map(function(key) {
+        FACE_KEYS.map((key:FACE_KEY) => {
             var index = face[key];
             var distance = distances[index];
             var position = positions[index];
@@ -89,7 +87,7 @@ export const sliceGeometry = (geometry:THREE.Geometry, plane:THREE.Plane, closeH
     return sliced;
 };
 
-var distanceAsPosition = function(distance) {
+const distanceAsPosition = (distance:number) : POSITION_TYPE => {
     if (distance < 0) {
         return BACK;
     }
@@ -99,18 +97,18 @@ var distanceAsPosition = function(distance) {
     return ON;
 };
 
-var findDistance = function(vertex, plane) {
+const findDistance = (vertex:THREE.Vector3, plane:THREE.Plane) => {
     return plane.distanceToPoint(vertex);
 };
 
 
-function FRONT(FRONT: any) {
-    throw new Error("Function not implemented.");
-}
+// function FRONT(FRONT: any) {
+//     throw new Error("Function not implemented.");
+// }
 
-function BACK(BACK: any) {
-    throw new Error("Function not implemented.");
-}
+// function BACK(BACK: any) {
+//     throw new Error("Function not implemented.");
+// }
 // const GeometryBuilder = function(sourceGeometry, targetGeometry, slicePlane) {
 //     this.sourceGeometry = sourceGeometry;
 //     this.targetGeometry = targetGeometry;

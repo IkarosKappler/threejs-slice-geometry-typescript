@@ -3,6 +3,7 @@
  *
  * @date 2021-09-28
  */
+import * as THREE from "three";
 import { FACE_KEY } from "./constants";
 export declare class GeometryBuilder {
     private sourceGeometry;
@@ -17,21 +18,21 @@ export declare class GeometryBuilder {
     private faceIndices;
     private faceNormals;
     private faceUvs;
-    constructor(sourceGeometry: any, targetGeometry: any, slicePlane: any);
+    constructor(sourceGeometry: THREE.Geometry, targetGeometry: THREE.Geometry, slicePlane: THREE.Plane);
     startFace(sourceFaceIndex?: number): void;
     endFace(): void;
     closeHoles(): void;
     addVertex(key: FACE_KEY): void;
     addIntersection(keyA: FACE_KEY, keyB: FACE_KEY, distanceA: number, distanceB: number): void;
-    addUv: (key: any) => void;
-    addIntersectionUv: (keyA: any, keyB: any, t: any) => void;
-    addNormal: (key: any) => void;
-    addIntersectionNormal: (keyA: any, keyB: any, t: any) => void;
-    addFace: (indices: any) => void;
-    addFacePart: (a: any, b: any, c: any) => void;
-    faceEdgeLength: (a: any, b: any) => any;
-    intersectionId(indexA: any, indexB: any): string;
-    keyIndex: (key: FACE_KEY) => number;
-    updateNewEdges: (index: any) => void;
-    faceNormal: (faceIndices: any) => any;
+    addUv(key: FACE_KEY): void;
+    addIntersectionUv(keyA: FACE_KEY, keyB: FACE_KEY, t: number): void;
+    addNormal(key: FACE_KEY): void;
+    addIntersectionNormal(keyA: FACE_KEY, keyB: FACE_KEY, t: number): void;
+    addFace(indices: number[]): void;
+    addFacePart(a: number, b: number, c: number): void;
+    faceEdgeLength(a: number, b: number): number;
+    intersectionId(indexA: number, indexB: number): string;
+    keyIndex(key: FACE_KEY): number;
+    updateNewEdges(index: number): void;
+    faceNormal(faceIndices: any): THREE.Vector3;
 }

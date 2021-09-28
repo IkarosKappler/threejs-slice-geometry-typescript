@@ -12,119 +12,6 @@ var faces_from_edges_1 = require("./faces-from-edges");
 var constants_1 = require("./constants");
 var GeometryBuilder = /** @class */ (function () {
     function GeometryBuilder(sourceGeometry, targetGeometry, slicePlane) {
-        this.addUv = function (key) {
-            if (!this.sourceFaceUvs) {
-                return;
-            }
-            var index = this.keyIndex(key);
-            var uv = this.sourceFaceUvs[index];
-            this.faceUvs.push(uv);
-        };
-        this.addIntersectionUv = function (keyA, keyB, t) {
-            if (!this.sourceFaceUvs) {
-                return;
-            }
-            var indexA = this.keyIndex(keyA);
-            var indexB = this.keyIndex(keyB);
-            var uvA = this.sourceFaceUvs[indexA];
-            var uvB = this.sourceFaceUvs[indexB];
-            var uv = uvA.clone().lerp(uvB, t);
-            this.faceUvs.push(uv);
-        };
-        this.addNormal = function (key) {
-            if (!this.sourceFace.vertexNormals.length) {
-                return;
-            }
-            var index = this.keyIndex(key);
-            var normal = this.sourceFace.vertexNormals[index];
-            this.faceNormals.push(normal);
-        };
-        this.addIntersectionNormal = function (keyA, keyB, t) {
-            if (!this.sourceFace.vertexNormals.length) {
-                return;
-            }
-            var indexA = this.keyIndex(keyA);
-            var indexB = this.keyIndex(keyB);
-            var normalA = this.sourceFace.vertexNormals[indexA];
-            var normalB = this.sourceFace.vertexNormals[indexB];
-            var normal = normalA.clone().lerp(normalB, t).normalize();
-            this.faceNormals.push(normal);
-        };
-        this.addFace = function (indices) {
-            if (indices.length === 3) {
-                this.addFacePart(indices[0], indices[1], indices[2]);
-                return;
-            }
-            var pairs = [];
-            for (var i = 0; i < indices.length; i++) {
-                for (var j = i + 1; j < indices.length; j++) {
-                    var diff = Math.abs(i - j);
-                    if (diff > 1 && diff < indices.length - 1) {
-                        pairs.push([indices[i], indices[j]]);
-                    }
-                }
-            }
-            pairs.sort(function (pairA, pairB) {
-                var lengthA = this.faceEdgeLength(pairA[0], pairA[1]);
-                var lengthB = this.faceEdgeLength(pairB[0], pairB[1]);
-                return lengthA - lengthB;
-            }.bind(this));
-            var a = indices.indexOf(pairs[0][0]);
-            indices = indices.slice(a).concat(indices.slice(0, a));
-            var b = indices.indexOf(pairs[0][1]);
-            var indicesA = indices.slice(0, b + 1);
-            var indicesB = indices.slice(b).concat(indices.slice(0, 1));
-            this.addFace(indicesA);
-            this.addFace(indicesB);
-        };
-        this.addFacePart = function (a, b, c) {
-            var normals = null;
-            if (this.faceNormals.length) {
-                normals = [
-                    this.faceNormals[a],
-                    this.faceNormals[b],
-                    this.faceNormals[c],
-                ];
-            }
-            var face = new THREE.Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
-            this.targetGeometry.faces.push(face);
-            if (!this.sourceFaceUvs) {
-                return;
-            }
-            this.targetGeometry.faceVertexUvs[0].push([
-                this.faceUvs[a],
-                this.faceUvs[b],
-                this.faceUvs[c]
-            ]);
-        };
-        this.faceEdgeLength = function (a, b) {
-            var indexA = this.faceIndices[a];
-            var indexB = this.faceIndices[b];
-            var vertexA = this.targetGeometry.vertices[indexA];
-            var vertexB = this.targetGeometry.vertices[indexB];
-            return vertexA.distanceToSquared(vertexB);
-        };
-        this.keyIndex = function (key) {
-            return constants_1.FACE_KEYS.indexOf(key);
-        };
-        this.updateNewEdges = function (index) {
-            var edgeIndex = this.newEdges.length - 1;
-            var edge = this.newEdges[edgeIndex];
-            if (edge.length < 2) {
-                edge.push(index);
-            }
-            else {
-                this.newEdges.push([index]);
-            }
-        };
-        this.faceNormal = function (faceIndices) {
-            var vertices = faceIndices.map(function (index) {
-                return this.targetGeometry.vertices[index];
-            }.bind(this));
-            var edgeA = vertices[0].clone().sub(vertices[1]);
-            var edgeB = vertices[0].clone().sub(vertices[2]);
-            return edgeA.cross(edgeB).normalize();
-        };
         this.sourceGeometry = sourceGeometry;
         this.targetGeometry = targetGeometry;
         this.slicePlane = slicePlane;
@@ -208,8 +95,133 @@ var GeometryBuilder = /** @class */ (function () {
         this.updateNewEdges(index);
     };
     ;
+    GeometryBuilder.prototype.addUv = function (key) {
+        if (!this.sourceFaceUvs) {
+            return;
+        }
+        var index = this.keyIndex(key);
+        var uv = this.sourceFaceUvs[index];
+        this.faceUvs.push(uv);
+    };
+    ;
+    GeometryBuilder.prototype.addIntersectionUv = function (keyA, keyB, t) {
+        if (!this.sourceFaceUvs) {
+            return;
+        }
+        var indexA = this.keyIndex(keyA);
+        var indexB = this.keyIndex(keyB);
+        var uvA = this.sourceFaceUvs[indexA];
+        var uvB = this.sourceFaceUvs[indexB];
+        var uv = uvA.clone().lerp(uvB, t);
+        this.faceUvs.push(uv);
+    };
+    ;
+    GeometryBuilder.prototype.addNormal = function (key) {
+        if (!this.sourceFace.vertexNormals.length) {
+            return;
+        }
+        var index = this.keyIndex(key);
+        var normal = this.sourceFace.vertexNormals[index];
+        this.faceNormals.push(normal);
+    };
+    ;
+    GeometryBuilder.prototype.addIntersectionNormal = function (keyA, keyB, t) {
+        if (!this.sourceFace.vertexNormals.length) {
+            return;
+        }
+        var indexA = this.keyIndex(keyA);
+        var indexB = this.keyIndex(keyB);
+        var normalA = this.sourceFace.vertexNormals[indexA];
+        var normalB = this.sourceFace.vertexNormals[indexB];
+        var normal = normalA.clone().lerp(normalB, t).normalize();
+        this.faceNormals.push(normal);
+    };
+    ;
+    GeometryBuilder.prototype.addFace = function (indices) {
+        var _this = this;
+        if (indices.length === 3) {
+            this.addFacePart(indices[0], indices[1], indices[2]);
+            return;
+        }
+        var pairs = [];
+        for (var i = 0; i < indices.length; i++) {
+            for (var j = i + 1; j < indices.length; j++) {
+                var diff = Math.abs(i - j);
+                if (diff > 1 && diff < indices.length - 1) {
+                    pairs.push([indices[i], indices[j]]);
+                }
+            }
+        }
+        pairs.sort((function (pairA, pairB) {
+            var lengthA = _this.faceEdgeLength(pairA[0], pairA[1]);
+            var lengthB = _this.faceEdgeLength(pairB[0], pairB[1]);
+            return lengthA - lengthB;
+        }).bind(this));
+        var a = indices.indexOf(pairs[0][0]);
+        indices = indices.slice(a).concat(indices.slice(0, a));
+        var b = indices.indexOf(pairs[0][1]);
+        var indicesA = indices.slice(0, b + 1);
+        var indicesB = indices.slice(b).concat(indices.slice(0, 1));
+        this.addFace(indicesA);
+        this.addFace(indicesB);
+    };
+    ;
+    GeometryBuilder.prototype.addFacePart = function (a, b, c) {
+        var normals = null;
+        if (this.faceNormals.length) {
+            normals = [
+                this.faceNormals[a],
+                this.faceNormals[b],
+                this.faceNormals[c],
+            ];
+        }
+        var face = new THREE.Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
+        this.targetGeometry.faces.push(face);
+        if (!this.sourceFaceUvs) {
+            return;
+        }
+        this.targetGeometry.faceVertexUvs[0].push([
+            this.faceUvs[a],
+            this.faceUvs[b],
+            this.faceUvs[c]
+        ]);
+    };
+    ;
+    GeometryBuilder.prototype.faceEdgeLength = function (a, b) {
+        var indexA = this.faceIndices[a];
+        var indexB = this.faceIndices[b];
+        var vertexA = this.targetGeometry.vertices[indexA];
+        var vertexB = this.targetGeometry.vertices[indexB];
+        return vertexA.distanceToSquared(vertexB);
+    };
+    ;
     GeometryBuilder.prototype.intersectionId = function (indexA, indexB) {
         return [indexA, indexB].sort().join(',');
+    };
+    ;
+    GeometryBuilder.prototype.keyIndex = function (key) {
+        return constants_1.FACE_KEYS.indexOf(key);
+    };
+    ;
+    GeometryBuilder.prototype.updateNewEdges = function (index) {
+        var edgeIndex = this.newEdges.length - 1;
+        var edge = this.newEdges[edgeIndex];
+        if (edge.length < 2) {
+            edge.push(index);
+        }
+        else {
+            this.newEdges.push([index]);
+        }
+    };
+    ;
+    GeometryBuilder.prototype.faceNormal = function (faceIndices) {
+        var _this = this;
+        var vertices = faceIndices.map((function (index) {
+            return _this.targetGeometry.vertices[index];
+        }).bind(this));
+        var edgeA = vertices[0].clone().sub(vertices[1]);
+        var edgeB = vertices[0].clone().sub(vertices[2]);
+        return edgeA.cross(edgeB).normalize();
     };
     ;
     return GeometryBuilder;

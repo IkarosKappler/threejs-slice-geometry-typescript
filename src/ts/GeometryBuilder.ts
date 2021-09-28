@@ -9,24 +9,27 @@ import * as THREE from "three";
 import { facesFromEdges } from "./faces-from-edges";
 import { FACE_KEY, FACE_KEYS } from "./constants";
 
+type Pair = [number,number];
+type FaceNormals = [THREE.Vector3, THREE.Vector3, THREE.Vector3];
+
 export class GeometryBuilder {
 
     private sourceGeometry: THREE.Geometry;
     private targetGeometry: THREE.Geometry;
     private slicePlane: THREE.Plane;
-    private addedVertices: number[]; // THREE.Vector3[];
+    private addedVertices: number[];
     private addedIntersections: number[];
-    private newEdges: number[][];
+    private newEdges: Array<number[]>;
 
     private sourceFaceIndex: number;
     private sourceFace: THREE.Face3;
-    private sourceFaceUvs: any; // TODO: what type is this?
+    private sourceFaceUvs: THREE.Vector2[];
 
     private faceIndices : number[];
-    private faceNormals : number[];
-    private faceUvs : any; // TODO: type?
+    private faceNormals : THREE.Vector3[];
+    private faceUvs : THREE.Vector2[];
     
-    constructor(sourceGeometry, targetGeometry, slicePlane) {
+    constructor(sourceGeometry: THREE.Geometry, targetGeometry: THREE.Geometry, slicePlane:THREE.Plane) {
         this.sourceGeometry = sourceGeometry;
         this.targetGeometry = targetGeometry;
         this.slicePlane = slicePlane;
@@ -70,7 +73,7 @@ export class GeometryBuilder {
             }, this);
     };
 
-    addVertex(key:FACE_KEY) : void { // TODO: check type?
+    addVertex(key:FACE_KEY) : void {
         this.addUv(key);
         this.addNormal(key);
 
@@ -112,55 +115,55 @@ export class GeometryBuilder {
         this.updateNewEdges(index);
     };
 
-    addUv = function(key) {
+    addUv(key:FACE_KEY) : void {
         if ( ! this.sourceFaceUvs) {
             return;
         }
-        var index = this.keyIndex(key);
-        var uv = this.sourceFaceUvs[index];
+        const index : number = this.keyIndex(key);
+        const uv : THREE.Vector2 = this.sourceFaceUvs[index];
         this.faceUvs.push(uv);
     };
 
-    addIntersectionUv = function(keyA, keyB, t) {
+    addIntersectionUv(keyA:FACE_KEY, keyB:FACE_KEY, t:number) : void {
         if ( ! this.sourceFaceUvs) {
             return;
         }
-        var indexA = this.keyIndex(keyA);
-        var indexB = this.keyIndex(keyB);
-        var uvA = this.sourceFaceUvs[indexA];
-        var uvB = this.sourceFaceUvs[indexB];
-        var uv = uvA.clone().lerp(uvB, t);
+        const indexA : number = this.keyIndex(keyA);
+        const indexB : number = this.keyIndex(keyB);
+        const uvA : THREE.Vector2 = this.sourceFaceUvs[indexA];
+        const uvB : THREE.Vector2 = this.sourceFaceUvs[indexB];
+        const uv : THREE.Vector2 = uvA.clone().lerp(uvB, t);
         this.faceUvs.push(uv);
     };
 
-    addNormal = function(key) {
+    addNormal(key:FACE_KEY) {
         if ( ! this.sourceFace.vertexNormals.length) {
             return;
         }
-        var index = this.keyIndex(key);
-        var normal = this.sourceFace.vertexNormals[index];
+        const index = this.keyIndex(key);
+        const normal = this.sourceFace.vertexNormals[index];
         this.faceNormals.push(normal);
     };
 
-    addIntersectionNormal = function(keyA, keyB, t) {
+    addIntersectionNormal(keyA:FACE_KEY, keyB:FACE_KEY, t:number) {
         if ( ! this.sourceFace.vertexNormals.length) {
             return;
         }
-        var indexA = this.keyIndex(keyA);
-        var indexB = this.keyIndex(keyB);
-        var normalA = this.sourceFace.vertexNormals[indexA];
-        var normalB = this.sourceFace.vertexNormals[indexB];
-        var normal = normalA.clone().lerp(normalB, t).normalize();
+        const indexA : number = this.keyIndex(keyA);
+        const indexB : number = this.keyIndex(keyB);
+        const normalA : THREE.Vector3 = this.sourceFace.vertexNormals[indexA];
+        const normalB : THREE.Vector3 = this.sourceFace.vertexNormals[indexB];
+        const normal : THREE.Vector3 = normalA.clone().lerp(normalB, t).normalize();
         this.faceNormals.push(normal);
     };
 
-    addFace = function(indices) {
+    addFace(indices:number[]) : void {
         if (indices.length === 3) {
             this.addFacePart(indices[0], indices[1], indices[2]);
             return;
         }
 
-        var pairs = [];
+        const pairs : Array<Pair>= [];
         for (var i = 0; i < indices.length; i++) {
             for (var j = i + 1; j < indices.length; j++) {
                 var diff = Math.abs(i - j);
@@ -170,25 +173,25 @@ export class GeometryBuilder {
             }
         }
 
-        pairs.sort(function(pairA, pairB) {
+        pairs.sort(((pairA:Pair, pairB:Pair) => {
             var lengthA = this.faceEdgeLength(pairA[0], pairA[1]);
             var lengthB = this.faceEdgeLength(pairB[0], pairB[1]);
             return lengthA - lengthB;
-        }.bind(this));
+        }).bind(this));
 
-        var a = indices.indexOf(pairs[0][0]);
+        const a : number = indices.indexOf(pairs[0][0]);
         indices = indices.slice(a).concat(indices.slice(0, a));
 
-        var b = indices.indexOf(pairs[0][1]);
-        var indicesA = indices.slice(0, b + 1);
-        var indicesB = indices.slice(b).concat(indices.slice(0, 1));
+        const b : number = indices.indexOf(pairs[0][1]);
+        const indicesA : number[] = indices.slice(0, b + 1);
+        const indicesB : number[] = indices.slice(b).concat(indices.slice(0, 1));
 
         this.addFace(indicesA);
         this.addFace(indicesB);
     };
 
-    addFacePart = function(a, b, c) {
-        var normals = null;
+    addFacePart(a:number, b:number, c:number) : void {
+        let normals : FaceNormals | undefined = null;
         if (this.faceNormals.length) {
             normals = [
                 this.faceNormals[a],
@@ -196,7 +199,7 @@ export class GeometryBuilder {
                 this.faceNormals[c],
             ];
         }
-        var face = new THREE.Face3(
+        const face : THREE.Face3 = new THREE.Face3(
             this.faceIndices[a],
             this.faceIndices[b],
             this.faceIndices[c],
@@ -213,25 +216,25 @@ export class GeometryBuilder {
         ]);
     };
 
-    faceEdgeLength = function(a, b) {
-        var indexA = this.faceIndices[a];
-        var indexB = this.faceIndices[b];
-        var vertexA = this.targetGeometry.vertices[indexA];
-        var vertexB = this.targetGeometry.vertices[indexB];
+    faceEdgeLength(a:number, b:number) : number {
+        const indexA : number = this.faceIndices[a];
+        const indexB : number = this.faceIndices[b];
+        const vertexA : THREE.Vector3 = this.targetGeometry.vertices[indexA];
+        const vertexB : THREE.Vector3 = this.targetGeometry.vertices[indexB];
         return vertexA.distanceToSquared(vertexB);
     };
 
-    intersectionId(indexA, indexB) : string {
+    intersectionId(indexA:number, indexB:number) : string {
         return [indexA, indexB].sort().join(',');
     };
 
-    keyIndex = function(key:FACE_KEY) {
+    keyIndex(key:FACE_KEY) : number {
         return FACE_KEYS.indexOf(key);
     };
 
-    updateNewEdges = function(index) {
-        var edgeIndex = this.newEdges.length - 1;
-        var edge = this.newEdges[edgeIndex];
+    updateNewEdges(index:number) : void {
+        const edgeIndex : number = this.newEdges.length - 1;
+        let edge : number[] = this.newEdges[edgeIndex];
         if (edge.length < 2) {
             edge.push(index);
         } else {
@@ -239,12 +242,12 @@ export class GeometryBuilder {
         }
     };
 
-    faceNormal = function(faceIndices) {
-        var vertices = faceIndices.map(function(index) {
+    faceNormal(faceIndices) {
+        const vertices : THREE.Vector3[] = faceIndices.map(((index:number) => {
             return this.targetGeometry.vertices[index];
-        }.bind(this));
-        var edgeA = vertices[0].clone().sub(vertices[1]);
-        var edgeB = vertices[0].clone().sub(vertices[2]);
+        }).bind(this));
+        const edgeA : THREE.Vector3 = vertices[0].clone().sub(vertices[1]);
+        const edgeB : THREE.Vector3 = vertices[0].clone().sub(vertices[2]);
         return edgeA.cross(edgeB).normalize();
     };
 

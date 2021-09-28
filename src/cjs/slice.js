@@ -28,8 +28,8 @@ var sliceGeometry = function (geometry, plane, closeHoles) {
         var facePositions = constants_1.FACE_KEYS.map(function (key) {
             return positions[face[key]];
         });
-        if (facePositions.indexOf(FRONT) === -1 &&
-            facePositions.indexOf(BACK) !== -1) {
+        if (facePositions.indexOf(constants_1.FRONT) === -1 &&
+            facePositions.indexOf(constants_1.BACK) !== -1) {
             return;
         }
         builder.startFace(faceIndex);
@@ -41,8 +41,8 @@ var sliceGeometry = function (geometry, plane, closeHoles) {
             var index = face[key];
             var distance = distances[index];
             var position = positions[index];
-            if (position === FRONT) {
-                if (lastPosition === BACK) {
+            if (position === constants_1.FRONT) {
+                if (lastPosition === constants_1.BACK) {
                     builder.addIntersection(lastKey, key, lastDistance, distance);
                     builder.addVertex(key);
                 }
@@ -53,7 +53,7 @@ var sliceGeometry = function (geometry, plane, closeHoles) {
             if (position === constants_1.ON) {
                 builder.addVertex(key);
             }
-            if (position === BACK && lastPosition === FRONT) {
+            if (position === constants_1.BACK && lastPosition === constants_1.FRONT) {
                 builder.addIntersection(lastKey, key, lastDistance, distance);
             }
             lastKey = key;
@@ -71,22 +71,22 @@ var sliceGeometry = function (geometry, plane, closeHoles) {
 exports.sliceGeometry = sliceGeometry;
 var distanceAsPosition = function (distance) {
     if (distance < 0) {
-        return BACK;
+        return constants_1.BACK;
     }
     if (distance > 0) {
-        return FRONT;
+        return constants_1.FRONT;
     }
     return constants_1.ON;
 };
 var findDistance = function (vertex, plane) {
     return plane.distanceToPoint(vertex);
 };
-function FRONT(FRONT) {
-    throw new Error("Function not implemented.");
-}
-function BACK(BACK) {
-    throw new Error("Function not implemented.");
-}
+// function FRONT(FRONT: any) {
+//     throw new Error("Function not implemented.");
+// }
+// function BACK(BACK: any) {
+//     throw new Error("Function not implemented.");
+// }
 // const GeometryBuilder = function(sourceGeometry, targetGeometry, slicePlane) {
 //     this.sourceGeometry = sourceGeometry;
 //     this.targetGeometry = targetGeometry;

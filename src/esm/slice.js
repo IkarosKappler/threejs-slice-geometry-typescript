@@ -1,7 +1,7 @@
 // Note: THREE.Geometry is only available until version 0.124.0
 import * as THREE from "three";
 import { GeometryBuilder } from "./GeometryBuilder";
-import { FACE_KEYS, ON } from "./constants";
+import { BACK, FACE_KEYS, FRONT, ON } from "./constants";
 // TODO: cc
 // module.exports = function(THREE:THREE) {
 // "use strict";
@@ -65,7 +65,7 @@ export const sliceGeometry = (geometry, plane, closeHoles) => {
     }
     return sliced;
 };
-var distanceAsPosition = function (distance) {
+const distanceAsPosition = (distance) => {
     if (distance < 0) {
         return BACK;
     }
@@ -74,15 +74,15 @@ var distanceAsPosition = function (distance) {
     }
     return ON;
 };
-var findDistance = function (vertex, plane) {
+const findDistance = (vertex, plane) => {
     return plane.distanceToPoint(vertex);
 };
-function FRONT(FRONT) {
-    throw new Error("Function not implemented.");
-}
-function BACK(BACK) {
-    throw new Error("Function not implemented.");
-}
+// function FRONT(FRONT: any) {
+//     throw new Error("Function not implemented.");
+// }
+// function BACK(BACK: any) {
+//     throw new Error("Function not implemented.");
+// }
 // const GeometryBuilder = function(sourceGeometry, targetGeometry, slicePlane) {
 //     this.sourceGeometry = sourceGeometry;
 //     this.targetGeometry = targetGeometry;

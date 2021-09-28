@@ -4,7 +4,7 @@
  * @date 2021-09-28
  */
 
-export const facesFromEdges = (edges) => {
+export const facesFromEdges = (edges:number[][]) => {
     var chains = joinEdges(edges).filter(validFace);
     var faces = chains.map(function(chain) {
         return chain.map(function(edge) {
@@ -14,9 +14,9 @@ export const facesFromEdges = (edges) => {
     return faces;
 }
 
-function joinEdges(edges) {
-    let changes = true;
-    var chains = edges.map(function(edge) {
+const joinEdges = (edges:number[][]) => {
+    let changes : boolean = true;
+    var chains : Array<number[][]> = edges.map((edge:number[]) => {
         return [edge];
     });
     while (changes) {
@@ -28,8 +28,8 @@ function joinEdges(edges) {
     return chains;
 }
 
-function connectChains(chains) {
-    chains.forEach(function(chainA, i) {
+const connectChains = (chains:Array<number[][]>) : boolean => {
+    chains.forEach(function(chainA:number[][], i:number) {
         chains.forEach(function(chainB, j) {
             var merged = mergeChains(chainA, chainB);
             if (merged) {
@@ -41,7 +41,7 @@ function connectChains(chains) {
     return false;
 }
 
-function mergeChains(chainA, chainB) {
+const mergeChains = (chainA:number[][], chainB:number[][]) => {
 
     if (chainA === chainB) {
         return false;
@@ -72,23 +72,22 @@ function mergeChains(chainA, chainB) {
     return false;
 }
 
-function chainStart(chain){
+const chainStart = (chain:number[][]) : number => {
     return chain[0][0];
 }
 
-function chainEnd(chain) {
+const chainEnd = (chain:number[][]) : number => {
     return chain[chain.length - 1][1];
 }
 
-function reverseChain(chain) {
+const reverseChain = (chain:number[][]) :void => {
     chain.reverse();
     chain.forEach(function(edge) {
         edge.reverse();
     });
 }
 
-function validFace(chain) {
+const validFace = (chain:number[][]) : 1|0 => {
     return chainStart(chain) === chainEnd(chain) ? 1 : 0;
 }
 
-// module.exports = facesFromEdges;
