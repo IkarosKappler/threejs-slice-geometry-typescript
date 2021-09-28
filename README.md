@@ -38,8 +38,8 @@ scene.add(mesh);
 ## Builds
 
 `CJS` builds from typescript
-* https://github.com/IkarosKappler/threejs-slice-geometry-typescript/dist/threejs-slice-geometry-main.js
-* https://github.com/IkarosKappler/threejs-slice-geometry-typescript/dist/threejs-slice-geometry-main.min.js
+* https://github.com/IkarosKappler/threejs-slice-geometry-typescript/blob/master/dist/threejs-slice-geometry-main.js
+* https://github.com/IkarosKappler/threejs-slice-geometry-typescript/blob/master/dist/threejs-slice-geometry-main.min.js
 
 Original JS builds:
 * http://tdhooper.github.io/threejs-slice-geometry/build/slice.js
