@@ -25,15 +25,12 @@
     "webpack:dev": "npx webpack --env=development --config webpack.config.js",
     "webpack:prod": "npx webpack --env=production --config webpack.config.js",
     "server": "npx http-server",
-    "_build": "npm run _clean && npm run _browserify && npm run _uglify",
-    "_clean": "rm -rf build && mkdir build",
-    "_browserify": "browserify src/browser.js -o build/slice.js",
-    "_uglify": "uglifyjs build/slice.js -o build/slice.min.js"
+    "dev_install_three": "[ -d ./temp/node_modules/three ] || npm i --prefix ./temp/ three",
+    "copy_three_lib": "npm run dev_install_three && cp -R ./temp/node_modules/three/build/three.min.js examples/lib/ && cp ./temp/node_modules/three/examples/js/controls/TrackballControls.js examples/lib/"
   },
   "dependencies": {
     "@types/offscreencanvas": "^2019.6.4",
     "@types/three": "^0.137.0",
-    "three": "^0.137.5",
     "three-geometry-hellfix": "^1.1.0",
     "typescript": "^4.4.3",
     "webpack": "^5.55.0",

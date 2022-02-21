@@ -1,5 +1,13 @@
 body {
-    padding: 0;
-    margin: 0;
-    background: #002432;
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  /* background: #111; */
+  background: #002432;
+}
+
+canvas {
+  height: 100%;
+  width: 100%;
+  display: block;
 }

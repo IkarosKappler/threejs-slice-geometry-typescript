@@ -27,7 +27,7 @@
 
         var tess = srf.tessellate();
 
-        console.log("ThreeGeometryHellfix", TGH);
+        // console.log("ThreeGeometryHellfix", TGH);
         var geometry = new TGH.Gmetry();
 
         geometry.vertices = asVector3( tess.points );
