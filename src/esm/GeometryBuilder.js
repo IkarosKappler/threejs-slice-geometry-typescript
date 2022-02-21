@@ -3,10 +3,9 @@
  *
  * @date 2021-09-28
  */
-// Note: THREE.Geometry is only available until version 0.124.0
-import * as THREE from "three";
 import { facesFromEdges } from "./faces-from-edges";
 import { FACE_KEYS } from "./constants";
+import { Face3 } from "three-geometry-hellfix";
 export class GeometryBuilder {
     constructor(sourceGeometry, targetGeometry, slicePlane) {
         this.sourceGeometry = sourceGeometry;
@@ -170,7 +169,7 @@ export class GeometryBuilder {
                 this.faceNormals[c],
             ];
         }
-        const face = new THREE.Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
+        const face = new Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
         this.targetGeometry.faces.push(face);
         if (!this.sourceFaceUvs) {
             return;

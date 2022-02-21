@@ -25,8 +25,14 @@
         <script src='lib/TrackballControls.js'></script>
         <script src='lib/verb.min.js'></script>
         <script src='lib/verbToThreeConversion.js'></script>
-        <script src='../build/slice.js'></script>
+        <!-- <script src="../node_modules/three-geometry-hellfix/dist/three-geometry-hellfix-main.js"></script> -->
+        <!-- <script src='../build/slice.js'></script> -->
+        <script src="../node_modules/three-geometry-hellfix/dist/three-geometry-hellfix-main.js"></script>
+        <script src="../dist/threejs-slice-geometry-typescript-main.js"></script>
+        <script src="../dist/threejs-slice-geometry-typescript-vendor.js"></script>
+        <script src="index.js"></script>
         <script>
+          /*  console.log("THREE", window["THREE"])
             var width = window.innerWidth;
             var height = window.innerHeight;
 
@@ -128,32 +134,32 @@
             var geom = new THREE.BoxGeometry(0.8, 0.8, 0.8);
             m.setPosition(new THREE.Vector3(1.2, -.8, 0));
             geom.applyMatrix(m);
-            geom = sliceGeometry(geom, plane);
-            scene.add( new THREE.Mesh( geom, mapMaterial ) );
+            geom = sliceGeometry(new TGH.Gmetry().fromBufferGeometry(geom), plane);
+            scene.add( new THREE.Mesh( geom.toBufferGeometry(), mapMaterial ) );
 
             var geom = new THREE.TorusGeometry( 0.5, 0.1, 16, 100 );
             m.setPosition(new THREE.Vector3(-1.2, -.8, 0));
             geom.applyMatrix(m);
-            geom = sliceGeometry(geom, plane);
-            scene.add( new THREE.Mesh( geom, mapMaterial ) );
+            geom = sliceGeometry(new TGH.Gmetry().fromBufferGeometry(geom), plane);
+            scene.add( new THREE.Mesh( geom.toBufferGeometry(), mapMaterial ) );
 
             var geom = wavyPlaneGeom();
             m.setPosition(new THREE.Vector3(0, .8, 0));
             geom.applyMatrix(m);
-            geom = sliceGeometry(geom, plane, true);
-            scene.add( new THREE.Mesh( geom, material ) );
+            geom = sliceGeometry(new TGH.Gmetry().fromBufferGeometry(geom), plane, true);
+            scene.add( new THREE.Mesh( geom.toBufferGeometry(), material ) );
 
             var geom = new THREE.BoxGeometry(0.8, 0.8, 0.8);
             m.setPosition(new THREE.Vector3(1.2, .8, 0));
             geom.applyMatrix(m);
-            geom = sliceGeometry(geom, plane, true);
-            scene.add( new THREE.Mesh( geom, mapMaterial ) );
+            geom = sliceGeometry(new TGH.Gmetry().fromBufferGeometry(geom), plane, true);
+            scene.add( new THREE.Mesh( geom.toBufferGeometry(), mapMaterial ) );
 
             var geom = new THREE.TorusGeometry( 0.5, 0.1, 16, 100 );
             m.setPosition(new THREE.Vector3(-1.2, .8, 0));
             geom.applyMatrix(m);
-            geom = sliceGeometry(geom, plane, true);
-            scene.add( new THREE.Mesh( geom, mapMaterial ) );
+            geom = sliceGeometry(new TGH.Gmetry().fromBufferGeometry(geom), plane, true);
+            scene.add( new THREE.Mesh( geom.toBufferGeometry(), mapMaterial ) );
 
             function render() {
               renderer.render(scene, camera);
@@ -178,7 +184,7 @@
             });
 
             window.addEventListener('resize', onWindowResize, false);
-            animate();
+            animate();  */
         </script>
     </body>
 </html>

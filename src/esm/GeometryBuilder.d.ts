@@ -5,6 +5,7 @@
  */
 import * as THREE from "three";
 import { FACE_KEY } from "./constants";
+import { Gmetry } from "three-geometry-hellfix";
 export declare class GeometryBuilder {
     private sourceGeometry;
     private targetGeometry;
@@ -18,7 +19,7 @@ export declare class GeometryBuilder {
     private faceIndices;
     private faceNormals;
     private faceUvs;
-    constructor(sourceGeometry: THREE.Geometry, targetGeometry: THREE.Geometry, slicePlane: THREE.Plane);
+    constructor(sourceGeometry: Gmetry, targetGeometry: Gmetry, slicePlane: THREE.Plane);
     startFace(sourceFaceIndex?: number): void;
     endFace(): void;
     closeHoles(): void;

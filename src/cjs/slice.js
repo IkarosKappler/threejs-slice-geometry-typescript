@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sliceGeometry = void 0;
-// Note: THREE.Geometry is only available until version 0.124.0
-var THREE = require("three");
 var GeometryBuilder_1 = require("./GeometryBuilder");
 var constants_1 = require("./constants");
+var three_geometry_hellfix_1 = require("three-geometry-hellfix");
 var sliceGeometry = function (geometry, plane, closeHoles) {
-    var sliced = new THREE.Geometry();
+    var sliced = new three_geometry_hellfix_1.Gmetry();
     var builder = new GeometryBuilder_1.GeometryBuilder(geometry, sliced, plane);
     var distances = [];
     var positions = [];

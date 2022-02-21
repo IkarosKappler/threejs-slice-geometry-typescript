@@ -2,9 +2,10 @@
 import * as THREE from "three";
 import { GeometryBuilder } from "./GeometryBuilder";
 import { BACK, FACE_KEY, FACE_KEYS, FRONT, ON, POSITION_TYPE } from "./constants";
+import { Gmetry } from "three-geometry-hellfix";
 
-export const sliceGeometry = (geometry:THREE.Geometry, plane:THREE.Plane, closeHoles:boolean) => {
-    const sliced : THREE.Geometry = new THREE.Geometry();
+export const sliceGeometry = (geometry:Gmetry, plane:THREE.Plane, closeHoles:boolean) => {
+    const sliced : Gmetry = new Gmetry();
     const builder = new GeometryBuilder(geometry, sliced, plane);
 
     const distances : number[] = [];

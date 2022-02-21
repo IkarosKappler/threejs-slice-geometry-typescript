@@ -6,10 +6,9 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GeometryBuilder = void 0;
-// Note: THREE.Geometry is only available until version 0.124.0
-var THREE = require("three");
 var faces_from_edges_1 = require("./faces-from-edges");
 var constants_1 = require("./constants");
+var three_geometry_hellfix_1 = require("three-geometry-hellfix");
 var GeometryBuilder = /** @class */ (function () {
     function GeometryBuilder(sourceGeometry, targetGeometry, slicePlane) {
         this.sourceGeometry = sourceGeometry;
@@ -175,7 +174,7 @@ var GeometryBuilder = /** @class */ (function () {
                 this.faceNormals[c],
             ];
         }
-        var face = new THREE.Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
+        var face = new three_geometry_hellfix_1.Face3(this.faceIndices[a], this.faceIndices[b], this.faceIndices[c], normals);
         this.targetGeometry.faces.push(face);
         if (!this.sourceFaceUvs) {
             return;

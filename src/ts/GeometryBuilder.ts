@@ -8,28 +8,29 @@
 import * as THREE from "three";
 import { facesFromEdges } from "./faces-from-edges";
 import { FACE_KEY, FACE_KEYS } from "./constants";
+import { Face3, Gmetry } from "three-geometry-hellfix";
 
 type Pair = [number,number];
 type FaceNormals = [THREE.Vector3, THREE.Vector3, THREE.Vector3];
 
 export class GeometryBuilder {
 
-    private sourceGeometry: THREE.Geometry;
-    private targetGeometry: THREE.Geometry;
+    private sourceGeometry: Gmetry;
+    private targetGeometry: Gmetry;
     private slicePlane: THREE.Plane;
     private addedVertices: number[];
     private addedIntersections: number[];
     private newEdges: Array<number[]>;
 
     private sourceFaceIndex: number;
-    private sourceFace: THREE.Face3;
+    private sourceFace: Face3;
     private sourceFaceUvs: THREE.Vector2[];
 
     private faceIndices : number[];
     private faceNormals : THREE.Vector3[];
     private faceUvs : THREE.Vector2[];
     
-    constructor(sourceGeometry: THREE.Geometry, targetGeometry: THREE.Geometry, slicePlane:THREE.Plane) {
+    constructor(sourceGeometry: Gmetry, targetGeometry: Gmetry, slicePlane:THREE.Plane) {
         this.sourceGeometry = sourceGeometry;
         this.targetGeometry = targetGeometry;
         this.slicePlane = slicePlane;
@@ -199,7 +200,7 @@ export class GeometryBuilder {
                 this.faceNormals[c],
             ];
         }
-        const face : THREE.Face3 = new THREE.Face3(
+        const face : Face3 = new Face3(
             this.faceIndices[a],
             this.faceIndices[b],
             this.faceIndices[c],

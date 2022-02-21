@@ -8,7 +8,6 @@
   "module": "src/esm/index.js",
   "types": "src/cjs/index.d.ts",
   "devDependencies": {
-    "three.js": "^0.73.0",
     "browserify": "^14.4.0",
     "jasmine": "^2.8.0",
     "uglify-js": "^3.1.3"
@@ -25,6 +24,7 @@
     "webpack": "npm run webpack:dev && npm run webpack:prod",
     "webpack:dev": "npx webpack --env=development --config webpack.config.js",
     "webpack:prod": "npx webpack --env=production --config webpack.config.js",
+    "server": "npx http-server",
     "_build": "npm run _clean && npm run _browserify && npm run _uglify",
     "_clean": "rm -rf build && mkdir build",
     "_browserify": "browserify src/browser.js -o build/slice.js",
@@ -32,7 +32,9 @@
   },
   "dependencies": {
     "@types/offscreencanvas": "^2019.6.4",
-    "three": "^0.124.0",
+    "@types/three": "^0.137.0",
+    "three": "^0.137.5",
+    "three-geometry-hellfix": "^1.1.0",
     "typescript": "^4.4.3",
     "webpack": "^5.55.0",
     "webpack-cli": "^4.8.0"

@@ -17,7 +17,8 @@
     }
 
     function tessellateCurve( curve ){
-        var geometry = new THREE.Geometry();
+        // var geometry = new THREE.Geometry();
+        var geometry = new TGH.Gmetry();
         geometry.vertices = asVector3( curve.tessellate() );
         return geometry;
     }
@@ -26,7 +27,8 @@
 
         var tess = srf.tessellate();
 
-        var geometry = new THREE.Geometry();
+        console.log("ThreeGeometryHellfix", TGH);
+        var geometry = new TGH.Gmetry();
 
         geometry.vertices = asVector3( tess.points );
 
@@ -36,7 +38,7 @@
                 return new THREE.Vector3( vn[0], vn[1], vn[2] );
             });
 
-            return new THREE.Face3(faceIndices[0],faceIndices[1],faceIndices[2], normals);
+            return new TGH.Face3(faceIndices[0],faceIndices[1],faceIndices[2], normals);
         });
 
         return geometry;

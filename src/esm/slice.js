@@ -1,9 +1,8 @@
-// Note: THREE.Geometry is only available until version 0.124.0
-import * as THREE from "three";
 import { GeometryBuilder } from "./GeometryBuilder";
 import { BACK, FACE_KEYS, FRONT, ON } from "./constants";
+import { Gmetry } from "three-geometry-hellfix";
 export const sliceGeometry = (geometry, plane, closeHoles) => {
-    const sliced = new THREE.Geometry();
+    const sliced = new Gmetry();
     const builder = new GeometryBuilder(geometry, sliced, plane);
     const distances = [];
     const positions = [];
